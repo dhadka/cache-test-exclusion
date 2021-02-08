@@ -23,9 +23,9 @@ jobs:
           path: |
             ~/cache
             !~/cache/baz.txt
-          key: ${{ runner.os }}-v1-test
+          key: ${{ runner.os }}-v2-test
           restore-keys: |
-            ${{ runner.os }}-v1-
+            ${{ runner.os }}-v2-
             
       - name: Generate files
         if: steps.cache.outputs.cache-hit != 'true'
