@@ -22,20 +22,21 @@ jobs:
         with:
           path: |
             ~/cache
-            !~/cache/baz.txt
-          key: ${{ runner.os }}-v2-test
+            !~/cache/subfolder
+          key: ${{ runner.os }}-v3-test
           restore-keys: |
-            ${{ runner.os }}-v2-
+            ${{ runner.os }}-v3-
             
       - name: Generate files
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p ~/cache
+          mkdir -p ~/cache/subfolder
           echo "foo" > ~/cache/foo.txt
           echo "bar" > ~/cache/bar.txt
-          echo "baz" > ~/cache/baz.txt
+          echo "baz" > ~/cache/subfolder/baz.txt
 
       - name: Post cache test
         if: steps.cache.outputs.cache-hit == 'true'
         run: |
-          ls ~/cache
+          ls -R ~/cache
