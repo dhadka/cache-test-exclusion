@@ -1,0 +1,41 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the main branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            ~/cache
+            !~/cache/baz.txt
+          key: ${{ runner.os }}-v1-test
+          restore-keys: |
+            ${{ runner.os }}-v1-
+            
+      - name: Generate files
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/cache
+          echo "foo" > ~/cache/foo.txt
+          echo "bar" > ~/cache/bar.txt
+          echo "baz" > ~/cache/baz.txt
+
+      - name: Post cache test
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: |
+          ls ~/cache
